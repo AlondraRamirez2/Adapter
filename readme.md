@@ -4,19 +4,19 @@
 
 Comprender cómo el patrón Adapter permite que interfaces incompatibles trabajen juntas creando un puente entre ellas.
 ---
-## 🔧 Step-by-Step Transformation Instructions
+## 🔧 Instrucciones de Transformación Paso a Paso
 
-### 1. Identify the Incompatibility Problem
+### 1. Identificar el Problema de Incompatibilidad
 
-The AudioPlayer can only play MP3 files
-We have AdvancedMediaPlayer implementations for VLC and MP4
-The interfaces are incompatible
+`AudioPlayer` solo puede reproducir archivos MP3.
+Tenemos implementaciones de `AdvancedMediaPlayer` para VLC y MP4.
+Las interfaces son incompatibles.
 
-### 2. Create the MediaAdapter Class
+### 2. Crear la Clase `MediaAdapter`
 
-Implement the MediaPlayer interface
-Add a field for AdvancedMediaPlayer
-Create a constructor that accepts audioType and initializes the appropriate player
+Implementa la interfaz `MediaPlayer`.
+Añade un campo para `AdvancedMediaPlayer`.
+Crea un constructor que reciba `audioType` e inicialice el reproductor adecuado.
 
 ```java
 public class MediaAdapter implements MediaPlayer {
@@ -29,30 +29,28 @@ public class MediaAdapter implements MediaPlayer {
             advancedMusicPlayer = new Mp4Player();
         }
     }
-    
-    
 }
 ```
-### 3. Implement the play Method in MediaAdapter
+### 3. Implementar el Método `play` en `MediaAdapter`
 
-Delegate the call to the appropriate method in AdvancedMediaPlayer
-Handle different audio types (vlc, mp4)
+Delegar la llamada al método correspondiente de `AdvancedMediaPlayer`.
+Manejar diferentes tipos de audio (vlc, mp4).
 
 ```java
-    @Override
-    public void play(String audioType, String fileName) {
-        if(audioType.equalsIgnoreCase("vlc")) {
-            advancedMusicPlayer.playVlc(fileName);
-        } else if(audioType.equalsIgnoreCase("mp4")) {
-            advancedMusicPlayer.playMp4(fileName);
-        }
+@Override
+public void play(String audioType, String fileName) {
+    if(audioType.equalsIgnoreCase("vlc")) {
+        advancedMusicPlayer.playVlc(fileName);
+    } else if(audioType.equalsIgnoreCase("mp4")) {
+        advancedMusicPlayer.playMp4(fileName);
     }
+}
 ```
 
-### 4. Modify AudioPlayer to Use the Adapter
+### 4. Modificar `AudioPlayer` para Usar el Adaptador
 
-Add a condition to use MediaAdapter for supported advanced formats
-Maintain existing MP3 functionality
+Añade una condición para usar `MediaAdapter` con formatos avanzados compatibles.
+Mantén la funcionalidad actual de MP3.
 
 ```java
 public class AudioPlayer implements MediaPlayer {
@@ -61,19 +59,19 @@ public class AudioPlayer implements MediaPlayer {
     @Override
     public void play(String audioType, String fileName) {
         if(audioType.equalsIgnoreCase("mp3")) {
-            System.out.println("Playing mp3 file: " + fileName);
+            System.out.println("Reproduciendo archivo mp3: " + fileName);
         } else if(audioType.equalsIgnoreCase("vlc") || audioType.equalsIgnoreCase("mp4")) {
             mediaAdapter = new MediaAdapter(audioType);
             mediaAdapter.play(audioType, fileName);
         } else {
-            System.out.println("Invalid media type: " + audioType);
+            System.out.println("Tipo de medio inválido: " + audioType);
         }
     }
 }
 ```
-### 5. Test the Complete Solution
+### 5. Probar la Solución Completa
 
-Create a test class to verify all media types work correctly
+Crea una clase de prueba para verificar que todos los tipos de medio funcionen correctamente.
 
 ```java
 public class AdapterPatternDemo {
